@@ -1,15 +1,15 @@
-package com.exam.clientapp;
+/*package com.exam.clientapp;
 
 import com.exam.lib.Connection;
 import com.exam.lib.Message;
 
 import java.net.Socket;
 
-public class ClientReader implements Runnable {
+public class CR implements Runnable {
     private String ip;
     private int port;
 
-    public ClientReader(String ip, int port) {
+    public CR(String ip, int port) {
         this.ip = ip;
         this.port = port;
     }
@@ -33,4 +33,4 @@ public class ClientReader implements Runnable {
             printMessage();
         }
     }
-}
+}*/

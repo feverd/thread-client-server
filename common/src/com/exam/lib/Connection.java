@@ -10,17 +10,21 @@ public class Connection implements AutoCloseable {
     private Socket socket;
     private ObjectInputStream input; //сделать из объектов байты
     private ObjectOutputStream output; // из байтов объект
-    private UUID uuid;
+    private String sender;
 
     public Connection(Socket socket) throws IOException {
         this.socket = socket;
         output = new ObjectOutputStream(socket.getOutputStream());
         input = new ObjectInputStream(socket.getInputStream());
-        uuid = UUID.randomUUID();
     }
 
-    public UUID getUuid() {
-        return uuid;
+    public void setSender(String sender) {
+        if (sender == null) throw new IllegalArgumentException("length < 5 or null");
+        this.sender = sender;
+    }
+
+    public String getSender() {
+        return sender;
     }
 
     public void sendMessage(Message message) throws IOException {
@@ -39,5 +43,12 @@ public class Connection implements AutoCloseable {
         input.close();
         output.close();
         socket.close();
+    }
+
+    @Override
+    public String toString() {
+        return "Connection{" +
+                "socket=" + socket +
+                '}';
     }
 }

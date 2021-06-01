@@ -18,7 +18,7 @@ public class Message implements Serializable {
     }
 
     public void setSender(String sender) {
-        if (sender.length() < 5 || sender == null) throw new IllegalArgumentException("length < 5 or null");
+        if (sender == null) throw new IllegalArgumentException("length < 5 or null");
         this.sender = sender;
     }
 
@@ -27,7 +27,7 @@ public class Message implements Serializable {
     }
 
     public void setText(String text) {
-        if (text.length() < 5 || text == null) throw new IllegalArgumentException("length < 5 or null");
+        if (text == null) throw new IllegalArgumentException("length < 5 or null");
         this.text = text;
     }
 

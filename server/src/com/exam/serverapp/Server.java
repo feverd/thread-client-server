@@ -83,7 +83,7 @@ public class Server {
                     connections.remove(connection);
                     connection.close();
                 } catch (Exception e) {
-                    System.out.println("Connection error"); // какая причина
+                    System.out.println("Connection error");
                 }
             }
         }

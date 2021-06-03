@@ -3,11 +3,9 @@ package com.exam.serverapp;
 import com.exam.lib.Connection;
 import com.exam.lib.Message;
 
-//import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-//import java.util.UUID;
 import java.util.Objects;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -19,6 +17,7 @@ public class Server {
     private CopyOnWriteArrayList<Connection> connections;
 
     public Server(int port) {
+        Objects.requireNonNull(port);
         this.port = port;
         messagesQueue = new ArrayBlockingQueue<>(10);
         connections = new CopyOnWriteArrayList<>();
@@ -27,16 +26,15 @@ public class Server {
     public void start() {
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             System.out.println("Server is running");
-            Writer writer = new Writer();
-            new Thread(writer).start();
+
+            new Thread(new Writer()).start();
 
             while (true) {
-                Socket newClient = serverSocket.accept(); // момент установки соединения с клиентом
-                connectionClient = new Connection(newClient); //принимаеи и отправляем сообщение
+                Socket newClient = serverSocket.accept();
+                connectionClient = new Connection(newClient);
                 connections.add(connectionClient);
 
                 new Thread(new Reader(connectionClient)).start();
-
             }
         } catch (IOException e) {
             System.out.println("Server error");
@@ -65,10 +63,11 @@ public class Server {
 
         @Override
         public void run() {
-
             try {
                 while (true) {
                     Message message = (Message) connection.readMessage();
+                    if ("exit".equals(message.getText())) break;
+
                     connection.setSender(message.getSender());
                     messagesQueue.put(message);
                 }
@@ -77,9 +76,11 @@ public class Server {
             } catch (InterruptedException e) {
                 System.out.println("Thread error");
             } catch (IOException e) {
+                connections.remove(connection);
                 System.out.println("Connection error");
             } finally {
                 try {
+                    connections.remove(connection);
                     connection.close();
                 } catch (Exception e) {
                     System.out.println("Connection error"); // какая причина

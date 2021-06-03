@@ -11,11 +11,13 @@ public class Connection implements AutoCloseable {
     private ObjectInputStream input; //сделать из объектов байты
     private ObjectOutputStream output; // из байтов объект
     private String sender;
+    private boolean closed;
 
     public Connection(Socket socket) throws IOException {
         this.socket = socket;
         output = new ObjectOutputStream(socket.getOutputStream());
         input = new ObjectInputStream(socket.getInputStream());
+        this.closed = false;
     }
 
     public void setSender(String sender) {
@@ -25,6 +27,10 @@ public class Connection implements AutoCloseable {
 
     public String getSender() {
         return sender;
+    }
+
+    public boolean isClosed() {
+        return closed;
     }
 
     public void sendMessage(Message message) throws IOException {
@@ -40,6 +46,7 @@ public class Connection implements AutoCloseable {
 
     @Override
     public void close() throws Exception {
+        closed = true;
         input.close();
         output.close();
         socket.close();
